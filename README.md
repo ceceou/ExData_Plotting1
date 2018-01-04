@@ -92,23 +92,92 @@ date. There should be four PNG files and four R code files.
 The four plots that you will need to construct are shown below. 
 
 
+plotData<-read.table("household_power_consumption.txt", header=T,sep=";",
+na.strings="?", colClasses=c('character','character','numeric','numeric','numeric'
+,'numeric','numeric','numeric','numeric'))
+
+## Filter data from the dates 2007-02-01 and 2007-02-02
+
+getdata<-plotData[plotData$Date %in% c("1/2/2007","2/2/2007"),]
+
+##getdata<-subset(plotData,Date>="1/2/2007"&Date<="2/2/2007")
+
+## Combine Data and Time column
+
+dateTime<- strptime(paste(getdata$Date,getdata$Time,sep=" "),"%d/%m/%Y %H:%M:%S")
+
+## Add dateTime column
+
+plotData<-cbind(dateTime,getdata)
+
 ### Plot 1
 
+## Create Plot 1:histogram
+
+hist(plotData$Global_active_power, col="red", main="Global Active Power", xlab="Global Active Power (kilowatts)")
+
+## Save as png.file
+
+dev.copy(png,file="plot1.png",height=480,width=480)
+dev.off()
 
 ![plot of chunk unnamed-chunk-2](figure/unnamed-chunk-2.png) 
 
 
 ### Plot 2
 
+## Create Plot 2
+
+plot(plotData$Global_active_power~plotData$dateTime, type="l", ylab="Global Active Power (kilowatts)", xlab="")
+
+## Save as png.file
+
+dev.copy(png,file="plot2.png",height=480,width=480)
+dev.off()
+
 ![plot of chunk unnamed-chunk-3](figure/unnamed-chunk-3.png) 
 
 
 ### Plot 3
 
+## Create Plot 3
+
+with(plotData,{
+  plot(Sub_metering_1~dateTime, type="l", ylab="Global Active Power (kilowatts)", xlab="")
+  lines(Sub_metering_2~dateTime,col='Red')
+  lines(Sub_metering_3~dateTime,col='Blue')
+})
+legend("topright",col=c("black","red","blue"),lwd=c(1,1,1),
+  c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+
+## Save as png.file
+
+dev.copy(png,file="plot3.png",height=480,width=480)
+dev.off()
+
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
 
 ### Plot 4
+
+## Create Plot 4
+
+par(mfrow=c(2,2),mar=c(4,4,2,1))
+with(plotData,{
+  plot(Global_active_power~dateTime,type="l",ylab="Global Active Power (kilowatts)", xlab="")
+  plot(Voltage~dateTime,type="l",ylab="Voltage (volt)", xlab="")
+  plot(Sub_metering_1~dateTime,type="l",ylab="Global Active Power (kilowatts)", xlab="")
+  lines(Sub_metering_2~dateTime,col='Red')
+  lines(Sub_metering_3~dateTime,col='Blue')
+  legend("topright",col=c("black","red","blue"),lty=1,lwd=2,bty="n",
+    legend=c("Sub_metering_1","Sub_metering_2","Sub_metering_3"))
+  plot(Global_reactive_power~dateTime,type="l",ylab="Global Reactive Power (kilowatts)",xlab="")
+})
+
+## Save as png.file
+
+dev.copy(png,file="plot4.png",height=480,width=480)
+dev.off()
 
 ![plot of chunk unnamed-chunk-5](figure/unnamed-chunk-5.png) 
 
