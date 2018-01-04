@@ -91,6 +91,7 @@ date. There should be four PNG files and four R code files.
 
 The four plots that you will need to construct are shown below. 
 
+## Loading the data
 
 plotData<-read.table("household_power_consumption.txt", header=T,sep=";",
 na.strings="?", colClasses=c('character','character','numeric','numeric','numeric'
@@ -99,8 +100,6 @@ na.strings="?", colClasses=c('character','character','numeric','numeric','numeri
 ## Filter data from the dates 2007-02-01 and 2007-02-02
 
 getdata<-plotData[plotData$Date %in% c("1/2/2007","2/2/2007"),]
-
-##getdata<-subset(plotData,Date>="1/2/2007"&Date<="2/2/2007")
 
 ## Combine Data and Time column
 
